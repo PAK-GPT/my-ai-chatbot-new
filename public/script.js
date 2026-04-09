@@ -1,43 +1,38 @@
-function typeMessage(element, text, speed = 30) {
-    let i = 0;
-    element.innerHTML = "";
-
-    function typing() {
-        if (i < text.length) {
-            element.innerHTML += text.charAt(i);
-            i++;
-            setTimeout(typing, speed);
-        }
-    }
-
-    typing();
-}
-
-function sendMessage() {
+async function sendMessage() {
     const input = document.getElementById("msg");
     const chat = document.getElementById("chat");
 
+    const userText = input.value;
+
     // USER MESSAGE
     const userMsg = document.createElement("p");
-    userMsg.classList.add("message");
-    userMsg.innerText = "You: " + input.value;
+    userMsg.innerText = "You: " + userText;
     chat.appendChild(userMsg);
 
-    // AI MESSAGE
+    // AI MESSAGE BOX
     const aiMsg = document.createElement("p");
-    aiMsg.classList.add("message");
     chat.appendChild(aiMsg);
 
-    // SIMPLE AI RESPONSE
-    let reply = "I am AI chatbot created by M.Hayyan Zahid 🤖";
+    // SIMPLE SMART LOGIC (FIX)
+    let reply = "";
 
-    if (input.value.toLowerCase() === "hello") {
+    if (userText.toLowerCase().includes("who are you")) {
+        reply = "I am AI chatbot created by M.Hayyan Zahid 🤖";
+    }
+    else if (userText.toLowerCase().includes("hello")) {
         reply = "Hello! How can I help you?";
     }
+    else if (userText.toLowerCase().includes("water")) {
+        reply = "The chemical formula of water is H2O 💧";
+    }
+    else if (userText.toLowerCase().includes("website")) {
+        reply = "You can create a website using HTML, CSS, and JavaScript.";
+    }
+    else {
+        reply = "I am still learning 🤖. Please ask something else.";
+    }
 
-    typeMessage(aiMsg, "AI: " + reply);
+    aiMsg.innerText = "AI: " + reply;
 
     input.value = "";
-} if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("sw.js");
 }
