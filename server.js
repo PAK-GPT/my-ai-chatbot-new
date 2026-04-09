@@ -37,7 +37,7 @@ app.post("/chat", async (req, res) => {
         "X-Title": "My Chatbot"
       },
       body: JSON.stringify({
-        model: "openai/gpt-4o-mini",
+        model: "meta-llama/llama-3.1-8b-instruct",
         messages: [
           { role: "system", content: "You are a helpful AI assistant." },
           { role: "user", content: message }
