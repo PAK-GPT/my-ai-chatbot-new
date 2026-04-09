@@ -13,26 +13,18 @@ async function sendMessage() {
     const aiMsg = document.createElement("p");
     chat.appendChild(aiMsg);
 
-    // SIMPLE SMART LOGIC (FIX)
-    let reply = "";
+    // SEND TO BACKEND
+    const response = await fetch("/chat", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ message: userText })
+    });
 
-    if (userText.toLowerCase().includes("who are you")) {
-        reply = "I am AI chatbot created by M.Hayyan Zahid 🤖";
-    }
-    else if (userText.toLowerCase().includes("hello")) {
-        reply = "Hello! How can I help you?";
-    }
-    else if (userText.toLowerCase().includes("water")) {
-        reply = "The chemical formula of water is H2O 💧";
-    }
-    else if (userText.toLowerCase().includes("website")) {
-        reply = "You can create a website using HTML, CSS, and JavaScript.";
-    }
-    else {
-        reply = "I am still learning 🤖. Please ask something else.";
-    }
+    const data = await response.json();
 
-    aiMsg.innerText = "AI: " + reply;
+    aiMsg.innerText = "AI: " + data.reply;
 
     input.value = "";
 }
