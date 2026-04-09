@@ -1,58 +1,38 @@
-body {
-    font-family: Arial, sans-serif;
-    background: #343541;
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-}
+ body {
+     font-family: Arial;
+     text-align: center;
+ }
 
-.chat-container {
-    width: 400px;
-    background: #444654;
-    border-radius: 10px;
-    padding: 15px;
-}
+ #chat {
+     width: 90%;
+     height: 400px;
+     margin: auto;
+     border: 1px solid #ccc;
+     padding: 10px;
+     overflow-y: auto;
+ }
 
-h2 {
-    text-align: center;
-}
+ .message {
+     animation: fadeIn 0.3s ease-in-out;
+     margin: 5px;
+ }
 
-#chat {
-    height: 300px;
-    overflow-y: auto;
-    background: #202123;
-    padding: 10px;
-    border-radius: 5px;
-    margin-bottom: 10px;
-}
+ @keyframes fadeIn {
+     from {
+         opacity: 0;
+         transform: translateY(10px);
+     }
 
-.user {
-    color: #00ffcc;
-}
+     to {
+         opacity: 1;
+         transform: translateY(0);
+     }
+ }
 
-.bot {
-    color: #ffffff;
-}
+ button {
+     transition: 0.2s;
+ }
 
-input {
-    width: 75%;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-}
-
-button {
-    padding: 10px;
-    border: none;
-    background: #19c37d;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-button:hover {
-    background: #15a96b;
-}
+ button:hover {
+     transform: scale(1.05);
+ }
