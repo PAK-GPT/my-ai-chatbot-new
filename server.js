@@ -20,26 +20,24 @@ app.post("/chat", async (req, res) => {
       return res.json({ reply: "Please send a message." });
     }
 
-    // 💬 Custom response
-    const lowerMsg = message.toLowerCase();
-
-    if (lowerMsg.includes("who are you")) {
+    // 💬 custom response
+    if (message.toLowerCase().includes("who are you")) {
       return res.json({
         reply: "I am an AI chatbot created by M. Hayyan Zahid."
       });
     }
 
-    // 🤖 AI request
+    // 🤖 OpenRouter request
     const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${API_KEY}`,
         "Content-Type": "application/json",
-        "HTTP-Referer": "http://localhost",
-        "X-Title": "MALIK AI ASSISTANT"
+        "HTTP-Referer": "https://replit.com",
+        "X-Title": "My Chatbot"
       },
       body: JSON.stringify({
-        model: "openai/gpt-3.5-turbo",
+        model: "openai/gpt-4o-mini",
         messages: [
           { role: "system", content: "You are a helpful AI assistant." },
           { role: "user", content: message }
@@ -47,40 +45,30 @@ app.post("/chat", async (req, res) => {
       })
     });
 
+    // ❌ error handling
     if (!response.ok) {
       const err = await response.text();
-      console.log("AI ERROR:", err);
+      console.log("OPENROUTER ERROR:", err);
 
       return res.json({
-        reply: "⚠ AI is busy. Try again later."
+        reply: "⚠ AI is busy (API error)."
       });
     }
 
+    // ✅ success
     const data = await response.json();
 
     const aiReply = data?.choices?.[0]?.message?.content;
 
-    res.json({
+    return res.json({
       reply: aiReply || "⚠ No response from AI"
     });
 
   } catch (error) {
     console.log("SERVER ERROR:", error);
 
-    res.json({
+    return res.json({
       reply: "⚠ Server error. Try again later."
     });
   }
-});
-
-// 🌐 Home route
-app.get("/", (req, res) => {
-  res.send("AI Chatbot is running 🚀");
-});
-
-// 🚀 Start server
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, "0.0.0.0", () => {
-  console.log("Server running on port " + PORT);
 });
