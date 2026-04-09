@@ -1,6 +1,10 @@
 const express = require("express");
 const cors = require("cors");
 
+const API_KEY = process.env.API_KEY;
+
+console.log("API KEY:", API_KEY);
+
 const app = express();
 
 // ✅ MIDDLEWARE
