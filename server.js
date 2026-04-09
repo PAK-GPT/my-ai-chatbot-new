@@ -1,35 +1,47 @@
 const express = require("express");
 const cors = require("cors");
-const path = require("path");
 
 const app = express();
 
+// ✅ MIDDLEWARE
 app.use(cors());
 app.use(express.json());
+app.use(express.static("public")); // IMPORTANT (fixes website loading)
 
-// 🔑 PUT NEW API KEY HERE (IMPORTANT: regenerate old one!)
-const API_KEY = "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";
-
-app.use(express.static("public"));
-
+// 🤖 CHAT ROUTE
 app.post("/chat", async (req, res) => {
     try {
         const userMessage = req.body.message;
 
+        // 🔥 CUSTOM RESPONSE
+        if (
+            userMessage &&
+            (
+                userMessage.toLowerCase().includes("who are you") ||
+                userMessage.toLowerCase().includes("who r you") ||
+                userMessage.toLowerCase().includes("what are you")
+            )
+        ) {
+            return res.json({
+                reply: "I am an AI chatbot created by M. Hayyan Zahid."
+            });
+        }
+
+        // 🤖 AI REQUEST
         const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
             method: "POST",
             headers: {
-                "Authorization": `Bearer ${API_KEY}`,
+                "Authorization": `Bearer ${process.env.API_KEY}`,
                 "Content-Type": "application/json",
-                "HTTP-Referer": "http://localhost",
-                "X-Title": "MALIK AI ASSISTANT"
+                "HTTP-Referer": "https://replit.com",
+                "X-Title": "AI Chatbot"
             },
             body: JSON.stringify({
-                model: "openai/gpt-3.5-turbo",
+                model: "openai/gpt-4o-mini",
                 messages: [
                     {
                         role: "system",
-                        content: "You are a helpful AI chatbot. When someone asks who you are, say: I am an AI bot created by Hayyan."
+                        content: "You are a helpful AI chatbot."
                     },
                     {
                         role: "user",
@@ -41,21 +53,23 @@ app.post("/chat", async (req, res) => {
 
         const data = await response.json();
 
-        const reply =
-            data?.choices?.[0]?.message?.content ||
-            data?.error?.message ||
-            "No response";
+        const reply = data?.choices?.[0]?.message?.content;
 
-        res.json({ reply });
+        res.json({
+            reply: reply || "No response from AI"
+        });
 
     } catch (error) {
-        console.log("Server Error:", error);
-        res.json({ reply: "Error connecting AI" });
+        console.log(error);
+        res.json({
+            reply: "Error connecting AI"
+        });
     }
 });
 
+// 🚀 START SERVER
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
     console.log("Server running on port " + PORT);
 });
