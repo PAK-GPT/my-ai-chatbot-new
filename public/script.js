@@ -1,30 +1,52 @@
+ const chatBox = document.getElementById("chat");
+const input = document.getElementById("msg");
+
 async function sendMessage() {
-    const input = document.getElementById("msg");
-    const chat = document.getElementById("chat");
+  const message = input.value.trim();
 
-    const userText = input.value;
+  if (!message) return;
 
-    // USER MESSAGE
-    const userMsg = document.createElement("p");
-    userMsg.innerText = "You: " + userText;
-    chat.appendChild(userMsg);
+  // show user message
+  addMessage("You", message);
 
-    // AI MESSAGE BOX
-    const aiMsg = document.createElement("p");
-    chat.appendChild(aiMsg);
+  input.value = "";
 
-    // SEND TO BACKEND
+  // typing animation
+  const typingId = addMessage("AI", "Typing...");
+
+  try {
     const response = await fetch("/chat", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ message: userText })
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ message })
     });
 
     const data = await response.json();
 
-    aiMsg.innerText = "AI: " + data.reply;
+    // replace typing text with real response
+    document.getElementById(typingId).innerText = data.reply;
 
-    input.value = "";
+  } catch (error) {
+    document.getElementById(typingId).innerText =
+      "⚠ Error connecting to server";
+  }
+}
+
+// add message to chat
+function addMessage(sender, text) {
+  const id = "msg_" + Date.now() + Math.random();
+
+  const div = document.createElement("div");
+  div.id = id;
+  div.className = sender === "You" ? "user-msg" : "ai-msg";
+
+  div.innerHTML = `<b>${sender}:</b> ${text}`;
+
+  chatBox.appendChild(div);
+
+  chatBox.scrollTop = chatBox.scrollHeight;
+
+  return id;
 }
