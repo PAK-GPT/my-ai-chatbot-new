@@ -34,7 +34,7 @@ app.post("/chat", async (req, res) => {
         "Authorization": `Bearer ${API_KEY}`,
         "Content-Type": "application/json",
         "HTTP-Referer": "https://replit.com",
-        "X-Title": "My Chatbot"
+        "X-Title": "MALIK AI ASSISTANT"
       },
       body: JSON.stringify({
         model: "meta-llama/llama-3.1-8b-instruct",
